@@ -1,5 +1,7 @@
 package gameElements;
 
+import android.util.Log;
+
 public class Move {
 
 	public static final String GATHER = "Gather";
@@ -8,6 +10,8 @@ public class Move {
 	public static final String ATTACK_SKILL = "Use Skill";
 	public static final String ATTACK_WEAPON = "Use Weapon";
 	public static final String SPECIAL = "Special";
+
+	public String moveLog = "";
 
 	protected String name = "";
 
@@ -41,7 +45,6 @@ public class Move {
 	}
 
 	public static boolean Analyze(Move A, Move B) {
-		// TODO Auto-generated method stub
 		if (A.getName() == "Ice ring") {
 			if (B.getName() == Move.GATHER) {
 				A.getCharacter().increaseEnergy();

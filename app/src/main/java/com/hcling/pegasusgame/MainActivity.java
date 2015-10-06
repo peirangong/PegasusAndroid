@@ -7,7 +7,6 @@ import gameElements.Move;
 import gameElements.MoveGenerator;
 import gameElements.PegasusSeiya;
 import gameElements.Skill;
-import gameElements.Weapon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,10 @@ public class MainActivity extends Activity {
 
     private ToggleButton mGatBnA, mDefBnA, mWearBnA, mWeapBnA, mAttBnA;
 
+    private ToggleButton mGatBnB, mDefBnB, mWearBnB, mWeapBnB, mAttBnB;
+
     private List<ToggleButton> mBnListA = new ArrayList<ToggleButton>();
+    private List<ToggleButton> mBnListB = new ArrayList<ToggleButton>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +68,29 @@ public class MainActivity extends Activity {
         mSimulateGameButton = (Button) findViewById(R.id.button1);
         mSimulateRoundButton = (Button) findViewById(R.id.button2);
 
-        mGatBnA = (ToggleButton) findViewById(R.id.toggleButton1);
-        mDefBnA = (ToggleButton) findViewById(R.id.toggleButton2);
-        mWearBnA = (ToggleButton) findViewById(R.id.toggleButton3);
-        mWeapBnA = (ToggleButton) findViewById(R.id.toggleButton4);
-        mAttBnA = (ToggleButton) findViewById(R.id.toggleButton5);
+        mGatBnA = (ToggleButton) findViewById(R.id.gatherButtonP1);
+        mDefBnA = (ToggleButton) findViewById(R.id.defendButtonP1);
+        mWearBnA = (ToggleButton) findViewById(R.id.armorButtonP1);
+        mWeapBnA = (ToggleButton) findViewById(R.id.weaponButtonP1);
+        mAttBnA = (ToggleButton) findViewById(R.id.attackButtonP1);
+
+        mGatBnB = (ToggleButton) findViewById(R.id.gatherButtonP2);
+        mDefBnB = (ToggleButton) findViewById(R.id.defendButtonP2);
+        mWearBnB = (ToggleButton) findViewById(R.id.armorButtonP2);
+        mWeapBnB = (ToggleButton) findViewById(R.id.weaponButtonP2);
+        mAttBnB = (ToggleButton) findViewById(R.id.attackButtonP2);
 
         mBnListA.add(mGatBnA);
         mBnListA.add(mDefBnA);
         mBnListA.add(mWearBnA);
         mBnListA.add(mWeapBnA);
         mBnListA.add(mAttBnA);
+
+        mBnListB.add(mGatBnB);
+        mBnListB.add(mDefBnB);
+        mBnListB.add(mWearBnB);
+        mBnListB.add(mWeapBnB);
+        mBnListB.add(mAttBnB);
 
         setupGame();
     }
@@ -111,7 +125,8 @@ public class MainActivity extends Activity {
                     setupGame();
                 }
 
-                List<Skill> skills = mCharA.getAvailableSkills();
+                List<Skill> skillsA = mCharA.getAvailableSkills();
+                List<Skill> skillsB = mCharB.getAvailableSkills();
                 for(int i = 0; i < mBnListA.size() && mMoveA == null; i++) {
                     if (mBnListA.get(i).isChecked()) {
                         switch (i) {
@@ -125,22 +140,53 @@ public class MainActivity extends Activity {
                                 mMoveA = mCharA.wearArmor();
                                 break;
                             case 3:
-                                if (skills.size() == 0) {
+                                if (skillsA.size() == 0) {
                                     mMoveA = mCharA.gather();
                                 } else {
-                                    mMoveA = mCharA.attack(skills.get(0));
+                                    mMoveA = mCharA.attack(skillsA.get(0));
                                 }
                                 break;
                             case 4:
-                                if (skills.size() == 0) {
+                                if (skillsA.size() == 0) {
                                     mMoveA = mCharA.gather();
                                 } else {
-                                    mMoveA = mCharA.attack(skills.get(skills.size()-1));
+                                    mMoveA = mCharA.attack(skillsA.get(skillsA.size()-1));
                                 }
                                 break;
                         }
                     }
                 }
+
+                for(int i = 0; i < mBnListB.size() && mMoveB == null; i++) {
+                    if (mBnListB.get(i).isChecked()) {
+                        switch (i) {
+                            case 0:
+                                mMoveB = mCharB.gather();
+                                break;
+                            case 1:
+                                mMoveB = mCharB.defense();
+                                break;
+                            case 2:
+                                mMoveB = mCharB.wearArmor();
+                                break;
+                            case 3:
+                                if (skillsB.size() == 0) {
+                                    mMoveB = mCharB.gather();
+                                } else {
+                                    mMoveB = mCharB.attack(skillsB.get(0));
+                                }
+                                break;
+                            case 4:
+                                if (skillsB.size() == 0) {
+                                    mMoveB = mCharB.gather();
+                                } else {
+                                    mMoveB = mCharB.attack(skillsB.get(skillsB.size()-1));
+                                }
+                                break;
+                        }
+                    }
+                }
+
                 playOneRound();
                 mResultText.setText(mGameLog);
 
@@ -154,7 +200,7 @@ public class MainActivity extends Activity {
         });
     }
 
-    public void onToggleClicked(View view) {
+    public void onToggleClickedP1(View view) {
         boolean on = ((ToggleButton) view).isChecked();
 
         if (on) {
@@ -165,6 +211,21 @@ public class MainActivity extends Activity {
         } else {
             for(int i=0;i<mBnListA.size();i++) {
                 mBnListA.get(i).setEnabled(true);
+            }
+        }
+    }
+
+    public void onToggleClickedP2(View view) {
+        boolean on = ((ToggleButton) view).isChecked();
+
+        if (on) {
+            for(int i=0;i<mBnListB.size();i++) {
+                mBnListB.get(i).setEnabled(false);
+            }
+            ((ToggleButton) view).setEnabled(true);
+        } else {
+            for(int i=0;i<mBnListB.size();i++) {
+                mBnListB.get(i).setEnabled(true);
             }
         }
     }
@@ -215,11 +276,13 @@ public class MainActivity extends Activity {
             mRandomNum = mRnd.nextDouble();
             mMoveB = mMoveGenB.generateMove_2(mRandomNum);
         }
-
-        // TODO: analyze result
-
+        // TODO: better way to display analyzed move results
+        mCharA.clearLog();
+        mCharB.clearLog();
         mGameOver = Move.Analyze(mMoveA, mMoveB);
+        mGameLog += mMoveA.moveLog + mMoveB.moveLog;
         mGameLog += mCharA.fightLog + mCharB.fightLog;
+
         mCharA.clearLog();
         mCharB.clearLog();
         mMoveA = null;

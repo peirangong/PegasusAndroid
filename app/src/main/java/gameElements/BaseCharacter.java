@@ -71,6 +71,7 @@ public class BaseCharacter {
 		if (DEBUG) {
 			Log.d(TAG, name + " gathers!");
 			fightLog += name + " gathers!\n";
+			move.moveLog = name + " gathers!\n";
 		}
 
 		return move;
@@ -83,6 +84,7 @@ public class BaseCharacter {
 		if (DEBUG) {
 			Log.d(TAG, name + " defends!");
 			fightLog += name + " defends!\n";
+			move.moveLog = name + " defends!\n";
 		}
 
 		return move;
@@ -104,6 +106,7 @@ public class BaseCharacter {
 			if (DEBUG) {
 				Log.d(TAG, name + "  wears one piece of armor!");
 				fightLog += name + "  wears one piece of armor!\n";
+				move.moveLog = name + "  wears one piece of armor!\n";
 			}
 
 		} else {
@@ -112,6 +115,7 @@ public class BaseCharacter {
 			if (DEBUG) {
 				Log.d(TAG, "No more armor! " + name + " defends!");
 				fightLog += "No more armor! " + name + " defends!\n";
+				move.moveLog = "No more armor! " + name + " defends!\n";
 			}
 		}
 
@@ -122,11 +126,12 @@ public class BaseCharacter {
 		Skill move;
 
 		if (energy < s.getCost()) {
-			Log.d(TAG, "Not enough energy!");
-			fightLog += "Not enough energy!\n";
 			attackPwr = 0;
 			defendPwr = 10;
 			move = new Skill(this, Move.DEFENSE, attackPwr, defendPwr, 0);
+			Log.d(TAG, "Not enough energy!");
+			fightLog += "Not enough energy!\n";
+			move.moveLog = "Not enough energy!\n";
 		} else {
 			energy = energy - s.getCost();
 			attackPwr = s.getAtt();
@@ -136,6 +141,7 @@ public class BaseCharacter {
 			if (DEBUG) {
 				Log.d(TAG, "Attack! " + s.getName());
 				fightLog += "Attack! " + s.getName() + "\n";
+				move.moveLog = "Attack! " + s.getName() + "\n";
 			}
 		}
 
@@ -147,22 +153,24 @@ public class BaseCharacter {
 		Weapon w = weaponList.get(loc);
 		Weapon move;
 		if (!weaponReady) {
-			Log.d(TAG, "Weapon is not ready!");
-			fightLog += "Weapon is not ready!\n";
 			attackPwr = 0;
 			defendPwr = 10;
 			move = new Weapon(this, Move.DEFENSE, attackPwr, defendPwr,
 					SpecialWeapon.Regular);
+			Log.d(TAG, "Weapon is not ready!");
+			fightLog += "Weapon is not ready!\n";
+			move.moveLog = "Weapon is not ready!\n";
 		} else {
 			attackPwr = w.getAtt();
 			defendPwr = w.getDef();
-			if (DEBUG) {
-				Log.d(TAG, "Attack! " + w.getName());
-				fightLog += "Attack! " + w.getName() + "\n";
-			}
 			weaponList.remove(loc);
 			move = new Weapon(this, w.getName(), attackPwr, defendPwr,
 					w.getSpecial());
+			if (DEBUG) {
+				Log.d(TAG, "Attack! " + w.getName());
+				fightLog += "Attack! " + w.getName() + "\n";
+				move.moveLog = "Attack! " + w.getName() + "\n";
+			}
 		}
 
 		return move;
