@@ -66,11 +66,13 @@ local.properties
 .project
 
 # Android Studio
+.gitignore
 .idea/
-.gradle
-/*/local.properties
+*gradle*
+gradle/
+local.properties
 /*/out
-/*/*/build
+/*/build
 /*/*/production
 *.iml
 *.iws
