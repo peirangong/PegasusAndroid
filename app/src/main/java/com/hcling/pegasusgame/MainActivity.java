@@ -27,9 +27,9 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "PegasusGame";
 
-    private TextView mResultText;
+    private TextView mResultText, mWinCntAText, mWinCntBText;
 
-    private Button mSimulateGameButton, mSimulateRoundButton;
+    private Button mSimulateGameButton, mSimulateRoundButton, mResetButton;
 
     private ScrollView mScrollView;
 
@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 
     private BaseCharacter mCharA, mCharB;
 
-    private int mRound;
+    private int mRound, mWinCntA, mWinCntB;
 
     private double mRandomNum;
 
@@ -65,8 +65,12 @@ public class MainActivity extends Activity {
         mResultText.setMovementMethod(new ScrollingMovementMethod());
         mScrollView = (ScrollView) findViewById(R.id.scroller1);
 
+        mWinCntAText = (TextView) findViewById(R.id.winCntAText);
+        mWinCntBText = (TextView) findViewById(R.id.winCntBText);
+
         mSimulateGameButton = (Button) findViewById(R.id.button1);
         mSimulateRoundButton = (Button) findViewById(R.id.button2);
+        mResetButton = (Button) findViewById(R.id.resetButton);
 
         mGatBnA = (ToggleButton) findViewById(R.id.gatherButtonP1);
         mDefBnA = (ToggleButton) findViewById(R.id.defendButtonP1);
@@ -99,6 +103,8 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        mWinCntA = 0;
+        mWinCntB = 0;
         mSimulateGameButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -230,6 +236,13 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void onResetClicked(View view) {
+        mResultText.setText("");
+        mWinCntA = 0;
+        mWinCntB = 0;
+        setWinCount();
+    }
+
     private void setupGame() {
         Log.d(TAG, "------- New Game ------");
         mCharA = new PegasusSeiya();
@@ -241,6 +254,7 @@ public class MainActivity extends Activity {
         mGameLog = "";
         mMoveGenA = new MoveGenerator(mCharA);
         mMoveGenB = new MoveGenerator(mCharB);
+        setWinCount();
 
         mCharA.gather();
         mCharA.wearArmor();
@@ -260,6 +274,7 @@ public class MainActivity extends Activity {
             playOneRound();
         }
         mResultText.setText(mGameLog);
+        setWinCount();
     }
 
     private void playOneRound() {
@@ -292,12 +307,15 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "Character: " + mCharA.getName()
                         + " wins!");
                 mGameLog += "Character: " + mCharA.getName() + " wins!" + "\n";
+                mWinCntA++;
             } else {
                 Log.d(TAG, "Character: " + mCharB.getName()
                         + " wins!");
                 mGameLog += "Character: " + mCharB.getName() + " wins!" + "\n";
+                mWinCntB++;
             }
             Log.d(TAG, "Game Over!");
+            setWinCount();
         } else {
             // TODO: end round
             Log.d(TAG, mCharA.getName() + " " + mCharA.getStatus());
@@ -307,4 +325,11 @@ public class MainActivity extends Activity {
             mRound++;
         }
     }
+
+    private void setWinCount() {
+        Log.d(TAG, "Set win count. A: " + mWinCntA + " B: " + mWinCntB);
+        mWinCntAText.setText(mCharA.getName() + " " + mWinCntA);
+        mWinCntBText.setText(mWinCntB + " " + mCharB.getName());
+    }
 }
+
